@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    build: ./backend
+    ports:
+      - 5000:5000
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    volumes:
+      - ./docs:/usr/share/nginx/html
+    ports:
+      - 8001:80
