@@ -56,3 +56,30 @@ def test_get_users(client):
     # Assert
     assert response.status_code == 200
     assert b'Test User' in response.data
+
+
+def test_get_users_with_filter(client):
+    # Arrange
+    user1 = {
+        'name': 'John Doe',
+        'email': 'johndoe@example.com',
+        'age': 25,
+        'color': 'blue'
+    }
+    user2 = {
+        'name': 'Jane Doe',
+        'email': 'janedoe@example.com',
+        'age': 28,
+        'color': 'green'
+    }
+    client.post('/users', data=json.dumps(user1), content_type='application/json')
+    client.post('/users', data=json.dumps(user2), content_type='application/json')
+
+    # Act
+    response = client.get('/users', query_string={'name': 'John Doe'})
+
+    # Assert
+    assert response.status_code == 200
+    users = json.loads(response.data)
+    assert len(users) == 1
+    assert users[0]['name'] == 'John Doe'
