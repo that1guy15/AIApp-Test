@@ -25,7 +25,11 @@ class UserList(Resource):
     @ns.marshal_list_with(user_model)
     def get(self):
         '''Fetch all users'''
-        users = mongo.db.users.find()
+        filters = {}
+        for key in request.args:
+            filters[key] = request.args.get(key)
+
+        users = mongo.db.users.find(filters)
         return list(users), 200
 
     @ns.doc('create_user')
