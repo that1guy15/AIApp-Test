@@ -56,3 +56,28 @@ def test_get_users(client):
     # Assert
     assert response.status_code == 200
     assert b'Test User' in response.data
+
+def test_get_users_with_filters(client):
+    # Arrange
+    user1 = {
+        'name': 'Test User 1',
+        'email': 'testuser1@example.com',
+        'age': 25,
+        'color': 'blue'
+    }
+    user2 = {
+        'name': 'Test User 2',
+        'email': 'testuser2@example.com',
+        'age': 30,
+        'color': 'red'
+    }
+    client.post('/users', data=json.dumps(user1), content_type='application/json')
+    client.post('/users', data=json.dumps(user2), content_type='application/json')
+
+    # Act
+    response = client.get('/users?age=25')
+
+    # Assert
+    assert response.status_code == 200
+    assert b'Test User 1' in response.data
+    assert b'Test User 2' not in response.data
